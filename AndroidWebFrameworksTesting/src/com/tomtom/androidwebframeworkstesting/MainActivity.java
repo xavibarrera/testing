@@ -30,6 +30,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+/**
+ * Main Activity of this testing Android project
+ * @author XBarrera
+ *
+ */
 public class MainActivity extends FragmentActivity implements GooglePlayServicesClient.ConnectionCallbacks, 
 															  GooglePlayServicesClient.OnConnectionFailedListener {
 
