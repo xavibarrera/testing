@@ -65,8 +65,8 @@
                 <div style='width:100%;background-color:dimgrey;padding:5px;' align="center" data-bind="style:{height:processPanelHeight}">
                     <div data-role="navbar" class="ui-mini" data-iconpos="left">
                         <ul>
-                            <li><a class="ui-btn ui-mini" data-icon="cloud" data-bind="event: {touchstart:window.startBackgroundProcess}">START</a></li>
-                            <li><a class="ui-btn ui-mini" data-icon="delete" data-bind="event: {touchstart:window.stopBackgroundProcess}">STOP</a></li>
+                            <li><a class="ui-btn ui-mini" data-icon="cloud" data-bind="click:window.startBackgroundProcess">START</a></li>
+                            <li><a class="ui-btn ui-mini" data-icon="delete" data-bind="click:window.stopBackgroundProcess">STOP</a></li>
                         </ul>
                     </div>
                     <p style="margin-left:auto;margin-right:auto;color:lightblue;font-size:14px;">background: <span data-bind="text: process"></span></p>
