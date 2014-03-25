@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.theme-1.4.2.min.css" />
+
+        <title>JSMonoThreadTest</title>
+    </head>
+    <body>
+        
+        <!-- SCREEN1 -->
+        <div id="screen1" data-role="page">
+            <!-- aside menu -->
+            <div data-role="panel" id="screen1panel" data-theme="b">
+                <div class="ui-checkbox">
+                    <label for="sandbox" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off">Freebase sandbox</label>
+                    <input type="checkbox" name="sandbox" id="sandbox" data-bind="checked: wantSandbox" data-enhanced="true">
+                </div>
+                 <div class="ui-checkbox">
+                    <label for="jsonCalc" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off">Long JSON process</label>
+                    <input type="checkbox" id="jsonCalc" name="jsonCalc" data-bind="checked: copyFreeBaseJSON" data-enhanced="true">
+                </div>
+                <div class="ui-checkbox">
+                    <label for="longLoop" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off">Long math process</label>
+                    <input type="checkbox" id="longLoop" name="longLoop" data-bind="checked: longProcess" data-enhanced="true">
+                </div>
+                <a href="#my-header" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-left">Close panel</a>
+            </div>
+            <!-- header -->
+            <div data-role="header" data-theme="b">
+                <a href="#screen1panel" class="ui-btn ui-btn-left ui-icon-grid ui-btn-icon-notext ui-corner-all"></a>
+                <h1>Home</h1>
+                <div class="ui-btn-right" data-role="controlgroup" data-type="horizontal">
+                    <a href="#screen2" class="ui-btn ui-icon-bullets ui-btn-icon-notext ui-corner-all"></a>
+                    <a href="#screen3" class="ui-btn ui-icon-action ui-btn-icon-notext ui-corner-all" data-rel="dialog" data-transition="pop"></a>
+                </div>
+            </div>
+            <!-- body -->
+            <div role="main" class="ui-content">
+
+                <div style='width:100%;background-color:dimgrey;padding:5px;' align="center" data-bind="style:{height:processPanelHeight}">
+                    <div data-role="navbar" class="ui-mini" data-iconpos="left">
+                        <ul>
+                            <li><a class="ui-btn ui-mini" data-icon="cloud" data-bind="event: {touchstart:window.startBackgroundProcess}">START</a></li>
+                            <li><a class="ui-btn ui-mini" data-icon="delete" data-bind="event: {touchstart:window.stopBackgroundProcess}">STOP</a></li>
+                        </ul>
+                    </div>
+                    <p style="margin-left:auto;margin-right:auto;color:lightblue;font-size:14px;">background: <span data-bind="text: process"></span></p>
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:60px" data-bind="visible: imgVisible">
+                            <img id="fbImg" data-bind="event:{load: window.imgLoadFinished}, attr:{src: imgPath}" /> 
+                        </div></div>
+
+                        <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:60px" data-bind="visible:jsonData().length > 0">
+                            <span data-bind="text:jsonData" style="font-size:4px;"></span>
+                        </div></div>
+                    </div> 
+                </div>
+                <div data-role="collapsible" data-theme="b" data-content-theme="b">
+                    <h4>Widgets testing</h4>
+                    <input name="slider-6" id="slider-6" value="50" min="0" max="100" data-highlight="true" data-mini="true" type="range">
+                    <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select>
+                    <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select>
+                    <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <label for="select-h-6a">Select A</label>
+                        <select name="select-h-6a" id="select-h-6a">
+                            <option value="#">One</option>
+                            <option value="#">Two</option>
+                            <option value="#">Three</option>
+                        </select>
+                        <label for="select-h-6b">Select B</label>
+                        <select name="select-h-6b" id="select-h-6b">
+                            <option value="#">One</option>
+                            <option value="#">Two</option>
+                            <option value="#">Three</option>
+                        </select>
+                        <label for="select-h-6c">Select C</label>
+                        <select name="select-h-6c" id="select-h-6c">
+                            <option value="#">One</option>
+                            <option value="#">Two</option>
+                            <option value="#">Three</option>
+                        </select>
+                    </fieldset>
+                    <fieldset data-role="controlgroup" data-mini="true">
+                        <label for="select-v-6a">Select A</label>
+                        <select name="select-v-6a" id="select-v-6a">
+                            <option value="#">One</option>
+                            <option value="#">Two</option>
+                            <option value="#">Three</option>
+                        </select>
+                        <label for="select-v-6b">Select B</label>
+                        <select name="select-v-6b" id="select-v-6b">
+                            <option value="#">One</option>
+                            <option value="#">Two</option>
+                            <option value="#">Three</option>
+                        </select>
+                        <label for="select-v-6c">Select C</label>
+                        <select name="select-v-6c" id="select-v-6c">
+                            <option value="#">One</option>
+                            <option value="#">Two</option>
+                            <option value="#">Three</option>
+                        </select>
+                    </fieldset>
+                    <select name="select-choice-8" id="select-choice-8" multiple="multiple" data-native-menu="false" data-icon="grid" data-iconpos="left">
+                        <option>Choose a few options:</option>
+                        <optgroup label="USPS">
+                            <option value="standard" selected="">Standard: 7 day</option>
+                            <option value="rush">Rush: 3 days</option>
+                            <option value="express">Express: next day</option>
+                            <option value="overnight">Overnight</option>
+                        </optgroup>
+                        <optgroup label="FedEx">
+                            <option value="firstOvernight">First Overnight</option>
+                            <option value="expressSaver">Express Saver</option>
+                            <option value="ground">Ground</option>
+                        </optgroup>
+                    </select>
+                    <input name="password" id="password" value="" autocomplete="off" type="password">
+                </div>
+            </div>
+
+             <!-- footer -->
+            <div data-role="footer">
+               <div id="deviceready" align="center">
+                    <p class="event listening">Phonegap: Connecting to Device</p>
+                    <p class="event received">Phonegap: Device is Ready</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN2 -->
+        <div id="screen2" data-role="page">
+            <!-- header -->
+            <div data-role="header" data-theme="b">
+                <a data-rel="back" class="ui-btn ui-btn-left ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+                <h1>List</h1>
+            </div>
+            <!-- body -->
+            <div role="main" class="ui-content">
+                <div style='width:100%;background-color:darkgray;color:white;margin-bottom:20px;font-size:10px;padding:5px;'>
+                    background: <span data-bind="text: process"></span>
+                </div>
+                <form>
+                    <input id="filter-for-listview" data-type="search" placeholder="Type to search...">
+                </form>
+                <ul data-role="listview" data-inset="true" data-filter="true" data-input="#filter-for-listview">
+                    <li><a href="#screen3">Acura</a></li>
+                    <li><a href="#screen3">Audi</a></li>
+                    <li><a href="#screen3">BMW</a></li>
+                    <li><a href="#screen3">Cadillac</a></li>
+                    <li><a href="#screen3">Ferrari</a></li>
+                    <li><a href="#screen3">Acura</a></li>
+                    <li><a href="#screen3">Audi</a></li>
+                    <li><a href="#screen3">BMW</a></li>
+                    <li><a href="#screen3">Cadillac</a></li>
+                    <li><a href="#screen3">Ferrari</a></li>
+                    <li><a href="#screen3">Acura</a></li>
+                    <li><a href="#screen3">Audi</a></li>
+                    <li><a href="#screen3">BMW</a></li>
+                    <li><a href="#screen3">Cadillac</a></li>
+                    <li><a href="#screen3">Ferrari</a></li>
+                    <li><a href="#screen3">Acura</a></li>
+                    <li><a href="#screen3">Audi</a></li>
+                    <li><a href="#screen3">BMW</a></li>
+                    <li><a href="#screen3">Cadillac</a></li>
+                    <li><a href="#screen3">Ferrari</a></li>
+                </ul>
+            </div>
+            <!-- footer -->
+            <div data-role="footer">
+                <p><a href="#screen1" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Home</a></p>
+            </div>
+        </div>
+
+         <!-- SCREEN3 -->
+        <div id="screen3" data-role="page">
+            <!-- header -->
+            <div data-role="header" data-theme="b">
+                <a data-rel="back" class="ui-btn ui-btn-left ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+                <h1>Detail</h1>
+            </div>
+            <!-- body -->
+            <div role="main" class="ui-content">
+                <div style='width:100%;background-color:darkgray;color:white;margin-bottom:20px;font-size:10px;padding:5px;'>
+                    background: <span data-bind="text: process"></span>
+                </div>
+                <form>
+                    <label for="text-basic">Text input:</label>
+                    <input type="text" name="text-basic" id="text-basic" value="">
+                    <label for="textarea">Textarea:</label>
+                    <textarea cols="40" rows="8" name="textarea" id="textarea"></textarea>
+                    <div data-role="rangeslider">
+                        <label for="range-1a">Rangeslider:</label>
+                        <input type="range" name="range-1a" id="range-1a" min="0" max="100" value="40">
+                        <label for="range-1b">Rangeslider:</label>
+                        <input type="range" name="range-1b" id="range-1b" min="0" max="100" value="80">
+                    </div>
+                    <input type="checkbox" data-role="flipswitch" name="flip-checkbox-1" id="flip-checkbox-1">
+                    <input type="checkbox" data-role="flipswitch" name="flip-checkbox-1" id="flip-checkbox-1">
+                    <select name="select-choice-1" id="select-choice-1" data-mini="true" data-inline="true">
+                        <option value="standard">Standard: 7 day</option>
+                        <option value="rush">Rush: 3 days</option>
+                        <option value="express">Express: next day</option>
+                        <option value="overnight">Overnight</option>
+                    </select>
+                    <fieldset data-role="controlgroup">
+                        <legend>Vertical:</legend>
+                        <input type="radio" name="radio-choice-v-2" id="radio-choice-v-2a" value="on" checked="checked">
+                        <label for="radio-choice-v-2a">One</label>
+                        <input type="radio" name="radio-choice-v-2" id="radio-choice-v-2b" value="off">
+                        <label for="radio-choice-v-2b">Two</label>
+                        <input type="radio" name="radio-choice-v-2" id="radio-choice-v-2c" value="other">
+                        <label for="radio-choice-v-2c">Three</label>
+                    </fieldset>
+                     <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                        <h4>More options</h4>
+                        <fieldset data-role="controlgroup">
+                            <legend>Vertical:</legend>
+                            <input type="checkbox" name="checkbox-v-2a" id="checkbox-v-2a">
+                            <label for="checkbox-v-2a">One</label>
+                            <input type="checkbox" name="checkbox-v-2b" id="checkbox-v-2b">
+                            <label for="checkbox-v-2b">Two</label>
+                            <input type="checkbox" name="checkbox-v-2c" id="checkbox-v-2c">
+                            <label for="checkbox-v-2c">Three</label>
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+            <!-- footer -->
+            <div data-role="footer">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#screen1" data-icon="home" class="ui-btn ui-shadow ui-btn-b">Home</a></li>
+                        <li><a href="#screen2" data-icon="back" class="ui-btn ui-shadow ui-btn-b">Back</a></li>
+                        <li><a href="#screen4" data-icon="info" class="ui-btn ui-shadow ui-btn-b" data-rel="dialog" data-transition="pop">Info</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+         <!-- SCREEN4 POPUP -->
+        <div id="screen4" data-role="page">
+            <div data-role="header" data-theme="b">
+                <h1>Info</h1>
+            </div>
+            <div role="main" class="ui-content">
+                
+            </div>
+            <div data-role="footer">
+                <a href="#screen3" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Close</a>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="js/knockout-3.1.0.js"></script>
+        <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/fastclick.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+    </body>
+</html>
