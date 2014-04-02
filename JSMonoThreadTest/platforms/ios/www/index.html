@@ -45,7 +45,7 @@
                     <input type="checkbox" id="jsonCalc" name="jsonCalc" data-bind="checked: copyFreeBaseJSON" data-enhanced="true">
                 </div>
                 <div class="ui-checkbox">
-                    <label for="longLoop" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off">Long math process</label>
+                    <label for="longLoop" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off">Long JS process</label>
                     <input type="checkbox" id="longLoop" name="longLoop" data-bind="checked: longProcess" data-enhanced="true">
                 </div>
                 <a href="#my-header" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-left">Close panel</a>
@@ -69,7 +69,7 @@
                             <li><a class="ui-btn ui-mini" data-icon="delete" data-bind="click:window.stopBackgroundProcess">STOP</a></li>
                         </ul>
                     </div>
-                    <p style="margin-left:auto;margin-right:auto;color:lightblue;font-size:14px;">background: <span data-bind="text: process"></span></p>
+                    <p style="margin-left:auto;margin-right:auto;color:lightblue;font-size:14px;"><span data-bind="text: process"></span></p>
                     <div class="ui-grid-a">
                         <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:60px" data-bind="visible: imgVisible">
                             <img id="fbImg" data-bind="event:{load: window.imgLoadFinished}, attr:{src: imgPath}" /> 
@@ -172,7 +172,7 @@
             <!-- body -->
             <div role="main" class="ui-content">
                 <div style='width:100%;background-color:darkgray;color:white;margin-bottom:20px;font-size:10px;padding:5px;'>
-                    background: <span data-bind="text: process"></span>
+                    <span data-bind="text: process"></span>
                 </div>
                 <form>
                     <input id="filter-for-listview" data-type="search" placeholder="Type to search...">
@@ -216,7 +216,7 @@
             <!-- body -->
             <div role="main" class="ui-content">
                 <div style='width:100%;background-color:darkgray;color:white;margin-bottom:20px;font-size:10px;padding:5px;'>
-                    background: <span data-bind="text: process"></span>
+                    <span data-bind="text: process"></span>
                 </div>
                 <form>
                     <label for="text-basic">Text input:</label>

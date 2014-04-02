@@ -113,7 +113,7 @@ function startFreeBaseSearch(){
         return;
    }
 
-   myViewModel.process('search started...');
+   myViewModel.process('search for Game Of Thrones started...');
    var freebaseV = myViewModel.wantSandbox()? 'v1sandbox' : 'v1';
    $.ajax({
         url: 'https://www.googleapis.com/freebase/'+freebaseV+'/search?query='+searchTopic,
@@ -132,10 +132,10 @@ function freeBaseSearchCallback(json) {
         resetModel();
         return;
     }
-
+    myViewModel.process('JSON data obtained');
     if (myViewModel.copyFreeBaseJSON()) {
-        // Copy response 1000 times
-        for (var p = 0; p < 1000; p++) {
+        // Copy response 5000 times
+        for (var p = 0; p < 5000; p++) {
             var result = json.result;
             var newObj = copyObject(result);
             newObj = newObj;
@@ -144,7 +144,7 @@ function freeBaseSearchCallback(json) {
         console.log(JSON.stringify(json));
     }
 
-    myViewModel.process('completed search 100%');
+    myViewModel.process('JSON data copied 5000 times');
     myViewModel.jsonData(JSON.stringify(json));
     setTimeout(startFreeBaseTopic, 1000);
 }
@@ -181,7 +181,7 @@ function startFreeBaseTopic(){
         return;
    }
 
-   myViewModel.process('topic started...');
+   myViewModel.process('Requesting Game Of Thrones details...');
    var freebaseV = myViewModel.wantSandbox()? 'v1sandbox' : 'v1';
    $.ajax({
         url: 'https://www.googleapis.com/freebase/'+freebaseV+'/topic/en/'+searchTopic+'?filter=/common/topic/image&limit=1',
@@ -205,7 +205,7 @@ function freeBaseTopicCallback(json) {
     
     console.log(JSON.stringify(json));
 
-    myViewModel.process('completed topic 100%');
+    myViewModel.process('JSON Details obtained!');
 
     if (freeBaseImg.length > 0)
         setTimeout(startFreeBaseTopicImage, 1000);
@@ -220,7 +220,7 @@ function startFreeBaseTopicImage() {
     }
 
    console.log(freeBaseImg);
-   myViewModel.process('Requesting image...');
+   myViewModel.process('Requesting Game Of Throne image...');
    myViewModel.imgVisible(true);
    var freebaseV = myViewModel.wantSandbox()? 'v1sandbox' : 'v1';
    myViewModel.imgPath('https://usercontent.googleapis.com/freebase/'+freebaseV+'/image'+freeBaseImg);
@@ -228,17 +228,17 @@ function startFreeBaseTopicImage() {
 
 function imgLoadFinished() {
     var img = document.getElementById('fbImg');
-    myViewModel.process('Image completed!');
+    myViewModel.process('Image obtained!');
     console.log("Dimensions " + img.height + "x" + img.width + ", Type: " + img.src.split('.').pop());
     setTimeout(processHeavyCalculation(), 1000);
 }
 
 function processHeavyCalculation() {
     if (myViewModel.longProcess()) {
-        myViewModel.process('Processing heavy calculation');
+        myViewModel.process('Heavy process started: 2000 console.log');
         setTimeout(function() {
             var a = '';
-            for (var i=1; i<1000; i++) {
+            for (var i=1; i<2000; i++) {
                a = a + ' - ' + i;
                console.log(a);
             }

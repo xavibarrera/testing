@@ -85,9 +85,20 @@
     // NOTE: To customize the view's frame size (which defaults to full screen), override
     // [self.viewController viewWillAppear:] in your view controller.
 
-    self.window.rootViewController = self.viewController;
-    [self.window makeKeyAndVisible];
 
+    self.window.rootViewController = self.viewController;
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        
+        [application setStatusBarStyle:UIStatusBarStyleLightContent];
+        [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+        
+        self.window.clipsToBounds =YES;
+        self.window.frame =CGRectMake(0,20,self.window.frame.size.width,self.window.frame.size.height-20);
+    }
+    
+    
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
