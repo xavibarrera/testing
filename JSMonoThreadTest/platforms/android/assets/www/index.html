@@ -45,7 +45,7 @@
                     <input type="checkbox" id="jsonCalc" name="jsonCalc" data-bind="checked: copyFreeBaseJSON" data-enhanced="true">
                 </div>
                 <div class="ui-checkbox">
-                    <label for="longLoop" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off">Long math process</label>
+                    <label for="longLoop" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off">Long JS process</label>
                     <input type="checkbox" id="longLoop" name="longLoop" data-bind="checked: longProcess" data-enhanced="true">
                 </div>
                 <a href="#my-header" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-left">Close panel</a>
@@ -65,11 +65,14 @@
                 <div style='width:100%;background-color:dimgrey;padding:5px;' align="center" data-bind="style:{height:processPanelHeight}">
                     <div data-role="navbar" class="ui-mini" data-iconpos="left">
                         <ul>
-                            <li><a class="ui-btn ui-mini" data-icon="cloud" data-bind="event: {touchstart:window.startBackgroundProcess}">START</a></li>
-                            <li><a class="ui-btn ui-mini" data-icon="delete" data-bind="event: {touchstart:window.stopBackgroundProcess}">STOP</a></li>
+                            <li><a class="ui-btn ui-mini" data-icon="cloud" data-bind="click:window.startBackgroundProcess">START</a></li>
+                            <li><a class="ui-btn ui-mini" data-icon="delete" data-bind="click:window.stopBackgroundProcess">STOP</a></li>
                         </ul>
                     </div>
-                    <p style="margin-left:auto;margin-right:auto;color:lightblue;font-size:14px;">background: <span data-bind="text: process"></span></p>
+                    <div style="margin-left:auto;margin-right:auto;color:lightblue;font-size:14px;"><span data-bind="text: process"></span></div>
+                    <div style="text-align:left;overflow:scroll;height:60px;color:white;font-size:10px;margin-bottom:5px;">
+                        <div style="white-space: pre-wrap" data-bind="text: historyText"></div>
+                    </div>
                     <div class="ui-grid-a">
                         <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:60px" data-bind="visible: imgVisible">
                             <img id="fbImg" data-bind="event:{load: window.imgLoadFinished}, attr:{src: imgPath}" /> 
@@ -82,82 +85,74 @@
                 </div>
                 <div data-role="collapsible" data-theme="b" data-content-theme="b">
                     <h4>Widgets testing</h4>
-                    <input name="slider-6" id="slider-6" value="50" min="0" max="100" data-highlight="true" data-mini="true" type="range">
-                    <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
-                        <option value="off">Off</option>
-                        <option value="on">On</option>
-                    </select>
-                    <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
-                        <option value="off">Off</option>
-                        <option value="on">On</option>
-                    </select>
-                    <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
-                        <option value="off">Off</option>
-                        <option value="on">On</option>
-                    </select>
-                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
-                        <label for="select-h-6a">Select A</label>
-                        <select name="select-h-6a" id="select-h-6a">
-                            <option value="#">One</option>
-                            <option value="#">Two</option>
-                            <option value="#">Three</option>
-                        </select>
-                        <label for="select-h-6b">Select B</label>
-                        <select name="select-h-6b" id="select-h-6b">
-                            <option value="#">One</option>
-                            <option value="#">Two</option>
-                            <option value="#">Three</option>
-                        </select>
-                        <label for="select-h-6c">Select C</label>
-                        <select name="select-h-6c" id="select-h-6c">
-                            <option value="#">One</option>
-                            <option value="#">Two</option>
-                            <option value="#">Three</option>
-                        </select>
-                    </fieldset>
-                    <fieldset data-role="controlgroup" data-mini="true">
-                        <label for="select-v-6a">Select A</label>
-                        <select name="select-v-6a" id="select-v-6a">
-                            <option value="#">One</option>
-                            <option value="#">Two</option>
-                            <option value="#">Three</option>
-                        </select>
-                        <label for="select-v-6b">Select B</label>
-                        <select name="select-v-6b" id="select-v-6b">
-                            <option value="#">One</option>
-                            <option value="#">Two</option>
-                            <option value="#">Three</option>
-                        </select>
-                        <label for="select-v-6c">Select C</label>
-                        <select name="select-v-6c" id="select-v-6c">
-                            <option value="#">One</option>
-                            <option value="#">Two</option>
-                            <option value="#">Three</option>
-                        </select>
-                    </fieldset>
-                    <select name="select-choice-8" id="select-choice-8" multiple="multiple" data-native-menu="false" data-icon="grid" data-iconpos="left">
-                        <option>Choose a few options:</option>
-                        <optgroup label="USPS">
-                            <option value="standard" selected="">Standard: 7 day</option>
-                            <option value="rush">Rush: 3 days</option>
-                            <option value="express">Express: next day</option>
-                            <option value="overnight">Overnight</option>
-                        </optgroup>
-                        <optgroup label="FedEx">
-                            <option value="firstOvernight">First Overnight</option>
-                            <option value="expressSaver">Express Saver</option>
-                            <option value="ground">Ground</option>
-                        </optgroup>
+                   
+                   
+                    <div data-role="tabs">
+                        <div data-role="navbar">
+                            <ul>
+                              <li><a href="#one" data-theme="a" data-ajax="false">one</a></li>
+                              <li><a href="#two"  data-theme="a" data-ajax="false">two</a></li>
+                              <li><a href="#three"  data-theme="a" data-ajax="false">three</a></li>
+                            </ul>
+                        </div>
+                        <div id="one" class="ui-content">
+                             <input name="slider-6" id="slider-6" value="50" min="0" max="100" data-highlight="true" data-mini="true" type="range">
+                            <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
+                                <option value="off">Off</option>
+                                <option value="on">On</option>
+                            </select>
+                            <select name="flip-6" id="flip-6" data-role="slider" data-mini="true">
+                                <option value="off">Off</option>
+                                <option value="on">On</option>
+                            </select>
+                        </div>
+                       <div id="two" class="ui-content">
+                             <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                                <label for="select-h-6a">Select A</label>
+                                <select name="select-h-6a" id="select-h-6a">
+                                    <option value="#">One</option>
+                                    <option value="#">Two</option>
+                                    <option value="#">Three</option>
+                                </select>
+                                <label for="select-h-6b">Select B</label>
+                                <select name="select-h-6b" id="select-h-6b">
+                                    <option value="#">One</option>
+                                    <option value="#">Two</option>
+                                    <option value="#">Three</option>
+                                </select>
+                            </fieldset>
+                            <div data-role="navbar" class="ui-mini" data-iconpos="left">
+                                <ul>
+                                    <li><a class="ui-btn ui-mini" data-icon="info" >Button1</a></li>
+                                    <li><a class="ui-btn ui-mini" data-icon="location">Button2</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="three" class="ui-content">
+                            <select name="select-choice-8" id="select-choice-8" multiple="multiple" data-native-menu="false" data-icon="grid" data-iconpos="left">
+                            <option>Choose a few options:</option>
+                            <optgroup label="USPS">
+                                <option value="standard" selected="">Standard: 7 day</option>
+                                <option value="rush">Rush: 3 days</option>
+                                <option value="express">Express: next day</option>
+                                <option value="overnight">Overnight</option>
+                            </optgroup>
+                            <optgroup label="FedEx">
+                                <option value="firstOvernight">First Overnight</option>
+                                <option value="expressSaver">Express Saver</option>
+                                <option value="ground">Ground</option>
+                            </optgroup>
                     </select>
                     <input name="password" id="password" value="" autocomplete="off" type="password">
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-             <!-- footer -->
-            <div data-role="footer">
-               <div id="deviceready" align="center">
-                    <p class="event listening">Phonegap: Connecting to Device</p>
-                    <p class="event received">Phonegap: Device is Ready</p>
+                <div data-role="collapsible" data-theme="b" data-content-theme="b">
+                    <h4>JSON Received</h4>
+                     <div style="height:300px;overflow:scroll;text-align:left;color:white;font-size:10px;margin-bottom:5px;">
+                        <div style="white-space: pre-wrap" data-bind="text: jsonDataRsp1"></div>
+                        <div style="white-space: pre-wrap" data-bind="text: jsonDataRsp2"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -172,7 +167,7 @@
             <!-- body -->
             <div role="main" class="ui-content">
                 <div style='width:100%;background-color:darkgray;color:white;margin-bottom:20px;font-size:10px;padding:5px;'>
-                    background: <span data-bind="text: process"></span>
+                    <span data-bind="text: process"></span>
                 </div>
                 <form>
                     <input id="filter-for-listview" data-type="search" placeholder="Type to search...">
@@ -216,7 +211,7 @@
             <!-- body -->
             <div role="main" class="ui-content">
                 <div style='width:100%;background-color:darkgray;color:white;margin-bottom:20px;font-size:10px;padding:5px;'>
-                    background: <span data-bind="text: process"></span>
+                    <span data-bind="text: process"></span>
                 </div>
                 <form>
                     <label for="text-basic">Text input:</label>
@@ -290,6 +285,7 @@
         <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.4.2.min.js"></script>
         <script type="text/javascript" src="js/fastclick.js"></script>
+        <script type="text/javascript" src="js/utils.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
             app.initialize();

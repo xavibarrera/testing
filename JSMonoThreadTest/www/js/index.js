@@ -51,7 +51,10 @@ function ViewModel() {
     var self = this;
 
     self.process            = ko.observable('stopped');
+    self.historyText        = ko.observable('');
     self.jsonData           = ko.observable('');
+    self.jsonDataRsp1       = ko.observable('');
+    self.jsonDataRsp2       = ko.observable('');
     self.imgPath            = ko.observable('');
     self.imgVisible         = ko.observable(false);
     self.processInitialized = ko.observable(false);
@@ -59,7 +62,9 @@ function ViewModel() {
     self.copyFreeBaseJSON   = ko.observable(true);
     self.longProcess        = ko.observable(true);
     self.processPanelHeight = ko.computed(function() {
-        return this.processInitialized()?'175px':'83px';
+        var historyHeight = this.historyText().length > 0 ? 60 : 0;
+        var photoHeight = 0;//this.processInitialized()? 92 : 0;
+        return 50 + historyHeight + photoHeight + 'px';
     }, this);
 }
 var myViewModel = new ViewModel();
@@ -76,6 +81,11 @@ $("#screen1").on( "pagecreate", function( event ) {
 var searchTopic = 'game_of_thrones'
 var freeBaseImg = '';
 
+function addTextToHistory(text) {
+    var historyText = myViewModel.historyText();
+    historyText = '[' + displayTime() + '] ' + text + '\n' + historyText;
+    myViewModel.historyText(historyText);
+}
 
 function startBackgroundProcess() {
     if (!myViewModel.processInitialized()) {
@@ -102,21 +112,20 @@ function resetAndScheduleBackgroundProcess() {
         return;
     }
 
-    myViewModel.process('scheduled for 2"');
     freeBaseImg = '';
-    setTimeout(startFreeBaseSearch, 2000); 
+    setTimeout(startFreeBaseSearch, 100); 
 }
 
 function startFreeBaseSearch(){
-   resetModel();
-   if (!myViewModel.processInitialized()) {
+    resetModel();
+    if (!myViewModel.processInitialized()) {
         return;
-   }
-
-   myViewModel.process('search for Game Of Thrones started...');
-   var freebaseV = myViewModel.wantSandbox()? 'v1sandbox' : 'v1';
-   $.ajax({
-        url: 'https://www.googleapis.com/freebase/'+freebaseV+'/search?query='+searchTopic,
+    }
+    addTextToHistory('Start search for GOT');
+    myViewModel.process('search for Game Of Thrones started...');
+    var freebaseV = myViewModel.wantSandbox()? 'v1sandbox' : 'v1';
+    $.ajax({
+        url: 'https://www.googleapis.com/freebase/'+freebaseV+'/search?query='+searchTopic+'&output=(description)',
         type: "GET",
         dataType: "jsonp",
         async:false,
@@ -133,6 +142,7 @@ function freeBaseSearchCallback(json) {
         return;
     }
     myViewModel.process('JSON data obtained');
+    addTextToHistory('Receive JSON of ' + getBytesNumber(json));
     if (myViewModel.copyFreeBaseJSON()) {
         // Copy response 5000 times
         for (var p = 0; p < 5000; p++) {
@@ -143,36 +153,11 @@ function freeBaseSearchCallback(json) {
         
         console.log(JSON.stringify(json));
     }
-
+    addTextToHistory('JSON data copied 5000 times');
     myViewModel.process('JSON data copied 5000 times');
-    myViewModel.jsonData(JSON.stringify(json));
-    setTimeout(startFreeBaseTopic, 1000);
-}
-
-function copyObject(origin) {
-    // If it's an array
-    if (Object.prototype.toString.call( origin ) === '[object Array]') {
-        var newArray = [];
-        for (var i=0; i<origin.length; i++) {
-            newArray[i] = copyObject(origin[i]);
-        }
-        return newArray;
-
-    // If it's a JSON object
-    } else if (typeof origin == 'object') {
-        var newObj = {};
-        var keys = Object.keys(origin);
-        for (var key in origin) {
-            newObj[key] = copyObject(origin[key]);
-        }
-        return newObj;
-
-    // if normal value
-    } else if (typeof origin == 'boolean' || typeof origin == 'number' || typeof origin == 'string') {
-        return origin;
-    }
-
-    return 'error';
+    //myViewModel.jsonData(JSON.stringify(json));
+    myViewModel.jsonDataRsp1(JSON.stringify(json));
+    setTimeout(processHeavyCalculation, 500);
 }
 
 function startFreeBaseTopic(){
@@ -182,6 +167,7 @@ function startFreeBaseTopic(){
    }
 
    myViewModel.process('Requesting Game Of Thrones details...');
+   addTextToHistory('Request GOT details');
    var freebaseV = myViewModel.wantSandbox()? 'v1sandbox' : 'v1';
    $.ajax({
         url: 'https://www.googleapis.com/freebase/'+freebaseV+'/topic/en/'+searchTopic+'?filter=/common/topic/image&limit=1',
@@ -203,10 +189,9 @@ function freeBaseTopicCallback(json) {
         freeBaseImg = json.property['/common/topic/image'].values[0].id;
     }
     
-    console.log(JSON.stringify(json));
-
+    addTextToHistory('Receive JSON of ' + getBytesNumber(json));
     myViewModel.process('JSON Details obtained!');
-
+    myViewModel.jsonDataRsp2(JSON.stringify(json));
     if (freeBaseImg.length > 0)
         setTimeout(startFreeBaseTopicImage, 1000);
     else
@@ -221,6 +206,7 @@ function startFreeBaseTopicImage() {
 
    console.log(freeBaseImg);
    myViewModel.process('Requesting Game Of Throne image...');
+   addTextToHistory('Request image');
    myViewModel.imgVisible(true);
    var freebaseV = myViewModel.wantSandbox()? 'v1sandbox' : 'v1';
    myViewModel.imgPath('https://usercontent.googleapis.com/freebase/'+freebaseV+'/image'+freeBaseImg);
@@ -229,12 +215,14 @@ function startFreeBaseTopicImage() {
 function imgLoadFinished() {
     var img = document.getElementById('fbImg');
     myViewModel.process('Image obtained!');
+    addTextToHistory('Image obtained');
     console.log("Dimensions " + img.height + "x" + img.width + ", Type: " + img.src.split('.').pop());
     setTimeout(processHeavyCalculation(), 1000);
 }
 
 function processHeavyCalculation() {
     if (myViewModel.longProcess()) {
+        addTextToHistory('Start heavy JS process: 2000 console.log');
         myViewModel.process('Heavy process started: 2000 console.log');
         setTimeout(function() {
             var a = '';
@@ -243,12 +231,13 @@ function processHeavyCalculation() {
                console.log(a);
             }
 
-            myViewModel.process('completed! restart process in 3"');
-            setTimeout(resetAndScheduleBackgroundProcess, 3000);
+            myViewModel.process('completed! restart process in 1"');
+            addTextToHistory('end of heavy JS process');
+            setTimeout(resetAndScheduleBackgroundProcess, 1000);
         }, 10);
     } else {
-        myViewModel.process('completed! restart process in 3"');
-        setTimeout(resetAndScheduleBackgroundProcess, 3000);
+        myViewModel.process('completed! restart process in 1"');
+        setTimeout(resetAndScheduleBackgroundProcess, 1000);
     }
 }
 
