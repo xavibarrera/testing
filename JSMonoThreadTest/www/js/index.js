@@ -60,7 +60,7 @@ function ViewModel() {
     self.processInitialized = ko.observable(false);
     self.wantSandbox        = ko.observable(true);
     self.copyFreeBaseJSON   = ko.observable(true);
-    self.longProcess        = ko.observable(true);
+    self.timeoutTrick       = ko.observable(false);
     self.processPanelHeight = ko.computed(function() {
         var historyHeight = this.historyText().length > 0 ? 60 : 0;
         var photoHeight = 0;//this.processInitialized()? 92 : 0;
@@ -73,7 +73,7 @@ $("#screen1").on( "pagecreate", function( event ) {
     ko.applyBindings(myViewModel);
     $('#sandbox').attr('checked',myViewModel.wantSandbox()).checkboxradio('refresh');
     $('#jsonCalc').attr('checked',myViewModel.copyFreeBaseJSON()).checkboxradio('refresh');
-    $('#longLoop').attr('checked',myViewModel.longProcess()).checkboxradio('refresh');
+    $('#timeoutTrick').attr('checked',myViewModel.timeoutTrick()).checkboxradio('refresh');
 
     //FastClick.attach(document.body);
 } );
@@ -113,7 +113,7 @@ function resetAndScheduleBackgroundProcess() {
     }
 
     freeBaseImg = '';
-    setTimeout(startFreeBaseSearch, 100); 
+    setTimeout(startFreeBaseSearch, 10); 
 }
 
 function startFreeBaseSearch(){
@@ -143,23 +143,59 @@ function freeBaseSearchCallback(json) {
     }
     myViewModel.process('JSON data obtained');
     addTextToHistory('Receive JSON of ' + getBytesNumber(json));
-    if (myViewModel.copyFreeBaseJSON()) {
-        // Copy response 5000 times
-        for (var p = 0; p < 5000; p++) {
-            var result = json.result;
-            var newObj = copyObject(result);
-            newObj = newObj;
-        }
-        
-        console.log(JSON.stringify(json));
-    }
-    addTextToHistory('JSON data copied 5000 times');
-    myViewModel.process('JSON data copied 5000 times');
-    //myViewModel.jsonData(JSON.stringify(json));
+    console.log(JSON.stringify(json));
     myViewModel.jsonDataRsp1(JSON.stringify(json));
-    setTimeout(processHeavyCalculation, 500);
+
+    setTimeout(function() {
+        copyJSON5000Times(json);
+    }, 10);
 }
 
+function copyJSON5000Times(json) {
+    if (myViewModel.copyFreeBaseJSON()) {
+        if (myViewModel.timeoutTrick()) {
+            processJSON(0, json);
+        } else {
+            // Copy response 5000 times
+            for (var p = 0; p < 5000; p++) {
+                var result = json.result;
+                var newObj = copyObject(result);
+                newObj = newObj;
+            }
+
+            addTextToHistory('JSON data copied 5000 times. Restart in 1"');
+            myViewModel.process('JSON data copied 5000 times. Restart in 1"');
+            setTimeout(resetAndScheduleBackgroundProcess, 1000);
+        } 
+    } else {
+        addTextToHistory('Restart in 1"');
+        myViewModel.process('Restart in 1"');
+        setTimeout(resetAndScheduleBackgroundProcess, 1000);
+    }
+}
+
+function processJSON(times, json) {
+    if (times < 5000) {
+        times++;
+        var result = json.result;
+        var newObj = copyObject(result);
+        newObj = newObj;
+        setTimeout(function() {
+            processJSON(times, json);
+        }, 0);
+    } else {
+        addTextToHistory('JSON copied 5000 times (with timeout). Restart in 1"');
+        myViewModel.process('JSON copied 5000 times (with timeout). Restart in 1"');
+        setTimeout(resetAndScheduleBackgroundProcess, 1000);
+    }
+}
+
+function freeBaseError(xhr, status, exception) {
+    stopBackgroundProcess();
+    alert("Error: " + JSON.stringify(xhr) + ' - ' + xhr.responseText + ' - ' + status+" - "+exception);
+}
+
+/*
 function startFreeBaseTopic(){
    if (!myViewModel.processInitialized()) {
         resetModel();
@@ -240,8 +276,4 @@ function processHeavyCalculation() {
         setTimeout(resetAndScheduleBackgroundProcess, 1000);
     }
 }
-
-function freeBaseError(xhr, status, exception) {
-    stopBackgroundProcess();
-    alert("Error: " + JSON.stringify(xhr) + ' - ' + xhr.responseText + ' - ' + status+" - "+exception);
-}
+*/
